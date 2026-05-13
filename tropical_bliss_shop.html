@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tropical Bliss Ghana 🍹</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --maroon: #8A1538;
+    --maroon-dark: #6e102c;
+    --maroon-light: #a81f46;
+    --gold: #F0B429;
+    --cream: #FFF8F0;
+    --white: #FFFFFF;
+    --text: #1a0a0f;
+    --muted: #7a4455;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--maroon);
+    color: white;
+    overflow-x: hidden;
+  }
+
+  /* ── NAVBAR ── */
+  .navbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 28px;
+    background: var(--white);
+    color: var(--text);
+    position: sticky; top: 0; z-index: 200;
+    box-shadow: 0 2px 20px rgba(138,21,56,0.15);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .logo-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--maroon), var(--maroon-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 900; color: var(--maroon); }
+  .logo-text span { color: var(--gold); }
+
+  .nav-right { display: flex; align-items: center; gap: 18px; }
+  .total-display {
+    font-weight: 700; color: var(--maroon); font-size: 0.95rem;
+    background: var(--cream); padding: 4px 12px; border-radius: 100px;
+    border: 1px solid rgba(138,21,56,0.15);
+  }
+  .cart-btn {
+    position: relative; cursor: pointer; font-size: 24px;
+    background: none; border: none; padding: 4px;
+    transition: transform 0.2s;
+  }
+  .cart-btn:hover { transform: scale(1.15); }
+  .badge {
+    position: absolute; top: -6px; right: -8px;
+    background: var(--gold); color: var(--maroon);
+    border-radius: 50%; padding: 1px 5px; font-size: 11px; font-weight: 700;
+  }
+  .menu-btn {
+    font-size: 26px; cursor: pointer; background: none; border: none;
+    color: var(--maroon); padding: 4px; transition: transform 0.2s;
+  }
+  .menu-btn:hover { transform: scale(1.1); }
+
+  /* ── SIDE MENU ── */
+  .overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300;
+  }
+  .overlay.open { display: block; }
+  .side-menu {
+    position: fixed; top: 0; right: -300px; width: 270px; height: 100%;
+    background: linear-gradient(160deg, var(--maroon-dark), #3d0718);
+    padding: 28px 24px; transition: right 0.3s ease; z-index: 400;
+    border-left: 1px solid rgba(255,255,255,0.1);
+  }
+  .side-menu.open { right: 0; }
+  .menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+  .menu-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); }
+  .close-btn { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+  .side-menu a {
+    display: flex; align-items: center; gap: 12px;
+    color: rgba(255,255,255,0.85); text-decoration: none;
+    margin: 6px 0; font-weight: 500; font-size: 0.95rem;
+    padding: 10px 14px; border-radius: 10px;
+    transition: background 0.2s, color 0.2s; cursor: pointer;
+  }
+  .side-menu a:hover { background: rgba(255,255,255,0.1); color: white; }
+  .side-menu a .m-icon { font-size: 1.1rem; width: 24px; }
+  .side-divider { height: 1px; background: rgba(255,255,255,0.12); margin: 12px 0; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 110px 24px 90px;
+    background:
+      linear-gradient(to bottom, rgba(100,5,30,0.55), rgba(138,21,56,0.75)),
+      url('https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=1200&q=80') center/cover no-repeat;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(240,180,41,0.2); color: var(--gold);
+    border: 1px solid rgba(240,180,41,0.4);
+    padding: 6px 18px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+  .hero p {
+    font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 520px; margin: 0 auto 2rem; line-height: 1.7;
+  }
+  .hero-btn {
+    display: inline-block;
+    background: var(--gold); color: var(--maroon);
+    padding: 14px 32px; border-radius: 100px;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(240,180,41,0.4); }
+
+  /* ── SECTION SHARED ── */
+  .sec-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.5rem;
+  }
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 900; margin-bottom: 0.5rem;
+  }
+
+  /* ── PRODUCTS ── */
+  .products {
+    background: var(--cream); color: var(--text);
+    text-align: center; padding: 70px 24px;
+  }
+  .products .sec-title { color: var(--maroon); }
+  .products .sec-label { color: var(--maroon-light); }
+  .products-sub { color: var(--muted); margin-bottom: 3rem; font-size: 0.95rem; }
+  .grid {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 22px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .card {
+    width: 190px; background: white; border: 1px solid rgba(138,21,56,0.1);
+    padding: 16px; border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(138,21,56,0.07);
+    transition: transform 0.25s, box-shadow 0.25s;
+    text-align: center;
+  }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(138,21,56,0.15); }
+  .card img {
+    width: 154px; height: 154px; object-fit: cover;
+    border-radius: 12px; margin-bottom: 10px;
+    display: block;
+  }
+  .card h4 { font-weight: 700; font-size: 0.95rem; color: var(--text); margin-bottom: 4px; }
+  .card .price { font-weight: 800; color: var(--maroon); font-size: 1rem; margin-bottom: 10px; }
+  .add-btn {
+    background: var(--maroon); color: white;
+    border: none; padding: 9px 18px; border-radius: 100px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; width: 100%;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .add-btn:hover { background: var(--maroon-light); transform: scale(1.03); }
+  .add-btn:active { transform: scale(0.97); }
+
+  /* ── BOX FORM SECTIONS ── */
+  .custom-section, .gifts-section, .contact-section {
+    padding: 60px 24px; background: var(--maroon);
+  }
+  .custom-section { background: linear-gradient(135deg, #6e102c, #8A1538); }
+  .gifts-section  { background: linear-gradient(135deg, #8A1538, #a11b43); }
+
+  .form-box {
+    max-width: 480px; margin: 2rem auto 0;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 28px; border-radius: 18px;
+    backdrop-filter: blur(8px);
+  }
+  .form-row { margin-bottom: 14px; }
+  .form-row label { display: block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
+  .form-row select, .form-row input {
+    width: 100%; padding: 12px 14px;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: white; border-radius: 10px; font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+    appearance: none; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-row select:focus, .form-row input:focus { border-color: var(--gold); }
+  .form-row select option { background: var(--maroon-dark); color: white; }
+  .form-row input::placeholder { color: rgba(255,255,255,0.4); }
+  .form-btn {
+    width: 100%; padding: 13px;
+    background: var(--gold); color: var(--maroon);
+    border: none; border-radius: 100px;
+    font-weight: 700; font-size: 0.95rem; cursor: pointer;
+    margin-top: 6px; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .form-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(240,180,41,0.35); }
+
+  /* ── ABOUT ── */
+  .about-section {
+    text-align: center; padding: 90px 40px; position: relative;
+    background:
+      linear-gradient(rgba(0,0,0,0.55), rgba(80,5,25,0.8)),
+      url('https://images.unsplash.com/photo-1546173159-315724a31696?w=1200&q=80') center/cover no-repeat;
+  }
+  .about-section h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 1rem; }
+  .about-section p { max-width: 540px; margin: 0 auto; color: rgba(255,255,255,0.85); font-size: 1.05rem; line-height: 1.8; }
+
+  /* ── CONTACT ── */
+  .contact-section { background: var(--maroon-dark); }
+  .contact-box {
+    max-width: 420px; margin: 2rem auto 0;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 28px; border-radius: 18px;
+  }
+  .contact-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .contact-item:last-child { border-bottom: none; }
+  .c-icon { font-size: 1.5rem; }
+  .c-info small { display: block; color: rgba(255,255,255,0.5); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2px; }
+  .c-info span { font-weight: 600; font-size: 0.95rem; }
+
+  /* ── CART MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.65); z-index: 500;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; align-items: flex-start; justify-content: flex-end; }
+  .modal-panel {
+    background: white; color: var(--text);
+    width: 380px; height: 100vh; overflow-y: auto;
+    padding: 0;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  .modal-header {
+    background: var(--maroon); color: white;
+    padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .modal-header h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .modal-close { background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+  .modal-body { padding: 20px 24px; }
+  .cart-empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .cart-empty .e-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .cart-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0; border-bottom: 1px solid #f0e8ec;
+    gap: 10px;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .cart-item-price { color: var(--maroon); font-weight: 700; font-size: 0.85rem; margin-top: 2px; }
+  .cart-item-tag { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+  .qty-controls { display: flex; align-items: center; gap: 6px; }
+  .qty-btn {
+    width: 28px; height: 28px;
+    background: var(--cream); border: 1px solid rgba(138,21,56,0.15);
+    border-radius: 50%; cursor: pointer;
+    font-size: 1rem; font-weight: 700; color: var(--maroon);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .qty-btn:hover { background: rgba(138,21,56,0.1); }
+  .qty-num { font-weight: 700; font-size: 0.9rem; min-width: 20px; text-align: center; }
+  .del-btn {
+    background: none; border: none; cursor: pointer; font-size: 1rem;
+    color: #ccc; transition: color 0.15s; padding: 4px;
+  }
+  .del-btn:hover { color: var(--maroon); }
+  .modal-footer {
+    position: sticky; bottom: 0; background: white;
+    padding: 18px 24px; border-top: 2px solid var(--cream);
+  }
+  .total-line { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .total-label { font-size: 0.85rem; color: var(--muted); }
+  .total-amount { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--maroon); }
+  .checkout-btn {
+    width: 100%; padding: 14px;
+    background: var(--maroon); color: white;
+    border: none; border-radius: 100px;
+    font-weight: 700; font-size: 1rem; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .checkout-btn:hover { background: var(--maroon-light); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: white;
+    padding: 12px 24px; border-radius: 100px;
+    font-size: 0.88rem; font-weight: 500;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #3d0718; text-align: center; padding: 32px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  footer .f-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--gold); margin-bottom: 6px; }
+  footer p { color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+
+  @media (max-width: 600px) {
+    .modal-panel { width: 100vw; }
+    .hero { padding: 80px 20px 60px; }
+    .navbar { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo" onclick="scrollToTop()">
+    <div class="logo-icon">🍹</div>
+    <div class="logo-text">Tropical<span>Bliss</span></div>
+  </div>
+  <div class="nav-right">
+    <div class="total-display" id="totalTop">₵0.00</div>
+    <button class="cart-btn" onclick="openCart()" aria-label="Open cart">
+      🛒<span class="badge" id="cartCount">0</span>
+    </button>
+    <button class="menu-btn" onclick="openMenu()">☰</button>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<!-- SIDE MENU -->
+<div class="side-menu" id="menu">
+  <div class="menu-header">
+    <div class="menu-logo">🍹 Tropical Bliss</div>
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+  </div>
+  <a href="#products" onclick="closeMenu()"><span class="m-icon">🧃</span> Products</a>
+  <a href="#custom" onclick="closeMenu()"><span class="m-icon">✨</span> Customisation</a>
+  <a href="#gifts" onclick="closeMenu()"><span class="m-icon">🎁</span> Gifts</a>
+  <a href="#about" onclick="closeMenu()"><span class="m-icon">🌿</span> About Us</a>
+  <a href="#contact" onclick="closeMenu()"><span class="m-icon">📞</span> Contact</a>
+  <div class="side-divider"></div>
+  <a onclick="openCart(); closeMenu()"><span class="m-icon">🛒</span> View Cart</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">100% Natural · Made in Ghana 🇬🇭</div>
+  <h1>Pure Tropical Energy<br>in Every Sip 🍹</h1>
+  <p>Cold-pressed juices crafted from Ghana's freshest fruits. No preservatives. No compromise. Just nature.</p>
+  <a href="#products" class="hero-btn">Shop Our Juices</a>
+</div>
+
+<!-- PRODUCTS -->
+<section id="products" class="products">
+  <div class="sec-label">Fresh &amp; Natural</div>
+  <h2 class="sec-title">Our Juice Products</h2>
+  <p class="products-sub">Handcrafted daily from locally sourced tropical fruits 🌴</p>
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=300&q=80" alt="Citrus Sunshine" onerror="this.src='https://images.unsplash.com/photo-1564419320461-6870880221ad?w=300&q=80'">
+      <h4>Citrus Sunshine</h4>
+      <p class="price">₵25.00</p>
+      <button class="add-btn" onclick="addItem('Citrus Sunshine', 25, '🍊 Citrus blend')">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=300&q=80" alt="Cocopine" onerror="this.src='https://images.unsplash.com/photo-1502741338009-cac2772e18bc?w=300&q=80'">
+      <h4>Cocopine</h4>
+      <p class="price">₵30.00</p>
+      <button class="add-btn" onclick="addItem('Cocopine', 30, '🥥 Coconut & pineapple mix')">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1553530979-7ee52a2670c4?w=300&q=80" alt="Mango Sips" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80'">
+      <h4>Mango Sips</h4>
+      <p class="price">₵28.00</p>
+      <button class="add-btn" onclick="addItem('Mango Sips', 28, '🥭 Fresh mango base')">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1563746924237-f81d5e9d81bc?w=300&q=80" alt="Grape Lina" onerror="this.src='https://images.unsplash.com/photo-1596591606975-97ee5cef3a1e?w=300&q=80'">
+      <h4>Grape Lina</h4>
+      <p class="price">₵30.00</p>
+      <button class="add-btn" onclick="addItem('Grape Lina', 30, '🍇 Sweet grape blend')">Add to Cart</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- CUSTOMISATION -->
+<section id="custom" class="custom-section">
+  <div style="text-align:center;">
+    <div class="sec-label">Make It Yours</div>
+    <h2 class="sec-title">Customise Your Juice 🧃</h2>
+    <p style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-top:0.3rem;">Pick your base and your boost. We'll blend it fresh.</p>
+  </div>
+  <div class="form-box">
+    <div class="form-row">
+      <label>Choose Your Base</label>
+      <select id="base">
+        <option>Orango</option>
+        <option>Pineapple Punch</option>
+        <option>Papaya Squash</option>
+        <option>Tropic Burst</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Choose Your Boost</label>
+      <select id="extra">
+        <option>Ginger Boost</option>
+        <option>Mint Fresh</option>
+        <option>Honey Sweet</option>
+        <option>Milky Bounce</option>
+      </select>
+    </div>
+    <button class="form-btn" onclick="addCustom()">✨ Add Custom Juice — ₵20</button>
+  </div>
+</section>
+
+<!-- GIFTS -->
+<section id="gifts" class="gifts-section">
+  <div style="text-align:center;">
+    <div class="sec-label">Share the Bliss</div>
+    <h2 class="sec-title">Gift Packages 🎁</h2>
+    <p style="color:rgba(255,255,255,0.7); font-size:0.95rem; margin-top:0.3rem;">Curated juice hampers for every occasion.</p>
+  </div>
+  <div class="form-box">
+    <div class="form-row">
+      <label>Select Package</label>
+      <select id="gift">
+        <option>Birthday Box</option>
+        <option>Love Package</option>
+        <option>Corporate Gift</option>
+        <option>Mummy's Baby</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Gift Message (optional)</label>
+      <input id="msg" type="text" placeholder="Write a sweet message...">
+    </div>
+    <button class="form-btn" onclick="addGift()">🎁 Add Gift Package — ₵35</button>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="sec-label" style="color:var(--gold);">Our Story</div>
+  <h2>About Tropical Bliss 🌿</h2>
+  <p>Tropical Bliss is built on a simple but powerful idea — transforming Ghana's rich agricultural produce into refreshing, healthy drinks that people can trust. Fresh tropical juice crafted with love, energy, and nature 🍍</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div style="text-align:center;">
+    <div class="sec-label">Get in Touch</div>
+    <h2 class="sec-title">Contact Us 📞</h2>
+  </div>
+  <div class="contact-box">
+    <div class="contact-item">
+      <div class="c-icon">📞</div>
+      <div class="c-info">
+        <small>Phone</small>
+        <span>+233 55 887 701</span>
+      </div>
+    </div>
+    <div class="contact-item">
+      <div class="c-icon">📧</div>
+      <div class="c-info">
+        <small>Email</small>
+        <span>tropicalbliss@gmail.com</span>
+      </div>
+    </div>
+    <div class="contact-item">
+      <div class="c-icon">📍</div>
+      <div class="c-info">
+        <small>Location</small>
+        <span>Accra, Ghana 🇬🇭</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">🍹 Tropical Bliss</div>
+  <p>Natural. Local. Premium. — Made in Ghana · © 2025</p>
+</footer>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cartModal" onclick="handleModalClick(event)">
+  <div class="modal-panel" id="modalPanel">
+    <div class="modal-header">
+      <h3>Your Cart 🛒</h3>
+      <button class="modal-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="modal-body" id="cartBody">
+      <!-- filled by JS -->
+    </div>
+    <div class="modal-footer" id="cartFooter" style="display:none;">
+      <div class="total-line">
+        <span class="total-label">Total</span>
+        <span class="total-amount" id="modalTotal">₵0</span>
+      </div>
+      <button class="checkout-btn" onclick="checkout()">Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let cart = [];
+
+  /* ── CART LOGIC ── */
+  function addItem(name, price, tag) {
+    let found = cart.find(i => i.name === name);
+    if (found) {
+      found.qty++;
+    } else {
+      cart.push({ name, price, qty: 1, tag: tag || '🍹 Fresh mix' });
+    }
+    updateCart();
+    showToast(name + ' added to cart 🛒');
+  }
+
+  function addCustom() {
+    let b = document.getElementById('base').value;
+    let e = document.getElementById('extra').value;
+    addItem(b + ' + ' + e, 20, '✨ Custom blend');
+  }
+
+  function addGift() {
+    let g = document.getElementById('gift').value;
+    let m = document.getElementById('msg').value;
+    let label = m ? g + ' — "' + m + '"' : g;
+    addItem(label, 35, '🎁 Gift package');
+    document.getElementById('msg').value = '';
+  }
+
+  function updateCart() {
+    let count = 0, total = 0;
+    cart.forEach(i => { count += i.qty; total += i.qty * i.price; });
+    document.getElementById('cartCount').textContent = count;
+    document.getElementById('totalTop').textContent = '₵' + total.toFixed(2);
+    renderCart();
+  }
+
+  function renderCart() {
+    let body = document.getElementById('cartBody');
+    let footer = document.getElementById('cartFooter');
+    body.innerHTML = '';
+
+    if (cart.length === 0) {
+      body.innerHTML = `<div class="cart-empty"><div class="e-icon">🛒</div><p>Your cart is empty.<br>Add some juices!</p></div>`;
+      footer.style.display = 'none';
+      return;
+    }
+
+    footer.style.display = 'block';
+    let total = 0;
+
+    cart.forEach((item, i) => {
+      total += item.qty * item.price;
+      let div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">₵${item.price.toFixed(2)} each</div>
+          <div class="cart-item-tag">${item.tag}</div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(${i}, -1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
+          <button class="del-btn" onclick="removeItem(${i})" title="Remove">🗑</button>
+        </div>
+      `;
+      body.appendChild(div);
+    });
+
+    document.getElementById('modalTotal').textContent = '₵' + total.toFixed(2);
+  }
+
+  function changeQty(i, v) {
+    cart[i].qty += v;
+    if (cart[i].qty <= 0) cart.splice(i, 1);
+    updateCart();
+  }
+
+  function removeItem(i) {
+    cart.splice(i, 1);
+    updateCart();
+  }
+
+  function checkout() {
+    showToast('Thank you! Your order is being processed 🎉');
+    cart = [];
+    updateCart();
+    closeCart();
+  }
+
+  /* ── MODAL ── */
+  function openCart() {
+    document.getElementById('cartModal').classList.add('open');
+    renderCart();
+  }
+
+  function closeCart() {
+    document.getElementById('cartModal').classList.remove('open');
+  }
+
+  function handleModalClick(e) {
+    if (e.target === document.getElementById('cartModal')) closeCart();
+  }
+
+  /* ── SIDE MENU ── */
+  function openMenu() {
+    document.getElementById('menu').classList.add('open');
+    document.getElementById('menuOverlay').classList.add('open');
+  }
+
+  function closeMenu() {
+    document.getElementById('menu').classList.remove('open');
+    document.getElementById('menuOverlay').classList.remove('open');
+  }
+
+  /* ── TOAST ── */
+  function showToast(msg) {
+    let t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  /* ── UTILS ── */
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
